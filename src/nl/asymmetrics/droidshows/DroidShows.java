@@ -1568,24 +1568,26 @@ public class DroidShows extends ListActivity
 				return 1;
 
 			if (sortOption == SORT_BY_UNSEEN) {
-				int unwatchedAired1 = object1.getUnwatchedAired();
-				int unwatchedAired2 = object2.getUnwatchedAired();
-				if (unwatchedAired1 == unwatchedAired2) {
-					Date nextAir1 = object1.getNextAir();
-					Date nextAir2 = object2.getNextAir();
-					if (nextAir1 == null && nextAir2 == null)
+				Date nextAir1 = object1.getNextAir();
+				Date nextAir2 = object2.getNextAir();
+				if (nextAir1 == null && nextAir2 == null){
+					int unwatchedAired1 = object1.getUnwatchedAired();
+					int unwatchedAired2 = object2.getUnwatchedAired();
+					if (unwatchedAired1 == unwatchedAired2) {
 						return object1.getName().compareToIgnoreCase(object2.getName());
-					if (nextAir1 == null)
+					}
+					if (unwatchedAired1 == 0)
 						return 1;
-					if (nextAir2 == null)
+					if (unwatchedAired2 == 0)
 						return -1;
-					return nextAir1.compareTo(nextAir2);
+					return ((Integer) unwatchedAired2).compareTo(unwatchedAired1);
 				}
-				if (unwatchedAired1 == 0)
+
+				if (nextAir1 == null)
 					return 1;
-				if (unwatchedAired2 == 0)
+				if (nextAir2 == null)
 					return -1;
-				return ((Integer) unwatchedAired2).compareTo(unwatchedAired1);
+				return nextAir1.compareTo(nextAir2);
 			} else {
 				return object1.getName().compareToIgnoreCase(object2.getName());
 			}
