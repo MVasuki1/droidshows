@@ -684,7 +684,7 @@ public class SQLiteStore extends SQLiteOpenHelper
 			+ (nextEpisode.episode < 10 ? "x0" : "x") + nextEpisode.episode;
 
 		if (showNextAiring) {
-			NextEpisode nextEpisodeAiring = getNextEpisode(nextEpisode.serieId, true);
+			NextEpisode nextEpisodeAiring = getNextEpisode(nextEpisode.serieId,  true, true);
 			if (nextEpisodeAiring != null)
 				return nextEpisodeString + " | [na] "+ nextEpisodeAiring.season
 					+ (nextEpisodeAiring.episode < 10 ? "x0" : "x") + nextEpisodeAiring.episode

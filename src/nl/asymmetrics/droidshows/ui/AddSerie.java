@@ -221,7 +221,7 @@ public class AddSerie extends ListActivity
 					SQLiteStore.NextEpisode nextEpisode = db.getNextEpisode(sToAdd.getId(), sToAdd.getDvdOrder());
 					int unwatchedAired = db.getEpsUnwatchedAired(sToAdd.getId(), sToAdd.getDvdOrder());
 					int unwatched = db.getEpsUnwatched(sToAdd.getId(), sToAdd.getDvdOrder());
-					String nextEpisodeStr = db.getNextEpisodeString(nextEpisode, DroidShows.showNextAiring && 0 < unwatchedAired && unwatchedAired < unwatched);
+					String nextEpisodeStr = db.getNextEpisodeString(nextEpisode, DroidShows.showNextAiring && 0 < unwatchedAired && unwatchedAired <= unwatched);
 					Drawable d = Drawable.createFromPath(sToAdd.getPosterThumb());
 					TVShowItem tvsi = new TVShowItem(sToAdd.getId(), sToAdd.getLanguage(), sToAdd.getPosterThumb(), d, sToAdd.getSerieName(), nseasons,
 						nextEpisodeStr, nextEpisode.firstAiredDate, unwatchedAired, unwatched, sToAdd.getPassiveStatus() == 1,
