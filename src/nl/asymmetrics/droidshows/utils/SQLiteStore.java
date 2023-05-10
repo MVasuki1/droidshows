@@ -1131,7 +1131,7 @@ public class SQLiteStore extends SQLiteOpenHelper
 		for (int i = 0; i < series.size(); i += 1)
 			updateShowStats(series.get(i));
 	}
-	
+
 	public void updateShowStats(String serieId) {
 		boolean dvdOrder = false;
 		Cursor c = Query("SELECT dvdOrder FROM series WHERE serieID="+ serieId);
@@ -1147,10 +1147,15 @@ public class SQLiteStore extends SQLiteOpenHelper
 		int unwatchedAired = getEpsUnwatchedAired(serieId, dvdOrder);
 		int unwatched = getEpsUnwatched(serieId, dvdOrder);
 		NextEpisode nextEpisode = getNextEpisode(serieId, dvdOrder);
-		String nextEpisodeString = getNextEpisodeString(nextEpisode, DroidShows.showNextAiring && 0 < unwatchedAired && unwatchedAired < unwatched);
-		execQuery("UPDATE series SET seasonCount="+ seasonCount +", unwatchedAired="+ unwatchedAired +", unwatched="+ unwatched +", nextEpisode='"+ nextEpisodeString +"', nextAir='"+ nextEpisode.firstAired +"' WHERE id="+ serieId);
+		NextEpisode nextAir = getNextEpisode(serieId, true, true);
+		String nextAirEpisode = null;
+		if(nextAir != null){
+			nextAirEpisode = nextAir.firstAired;
+		}
+		String nextEpisodeString = getNextEpisodeString(nextEpisode, DroidShows.showNextAiring && 0 < unwatchedAired && unwatchedAired <= unwatched);
+		execQuery("UPDATE series SET seasonCount="+ seasonCount +", unwatchedAired="+ unwatchedAired +", unwatched="+ unwatched +", nextEpisode='"+ nextEpisodeString +"', nextAir='"+ nextAirEpisode +"' WHERE id="+ serieId);
 	}
-	
+
 	public void updateToday(String newToday) {
 		today = newToday;
 	}

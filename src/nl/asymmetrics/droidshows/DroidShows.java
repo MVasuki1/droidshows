@@ -1583,11 +1583,24 @@ public class DroidShows extends ListActivity
 					return ((Integer) unwatchedAired2).compareTo(unwatchedAired1);
 				}
 
-				if (nextAir1 == null)
+				if (nextAir1 == null){
 					return 1;
-				if (nextAir2 == null)
+				}
+				if (nextAir2 == null){
 					return -1;
-				return nextAir1.compareTo(nextAir2);
+				}
+
+				String newToday = new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime());	
+				String nAir1 = new SimpleDateFormat("yyyy-MM-dd").format(nextAir1);
+				String nAir2 = new SimpleDateFormat("yyyy-MM-dd").format(nextAir1);
+				if((nAir1.compareTo(newToday) >=0) && (nAir2.compareTo(newToday) >=0))
+					return nextAir1.compareTo(nextAir2);
+				else if((nAir1.compareTo(newToday) >=0) && (nAir2.compareTo(newToday) < 0))
+					return -1;
+				else if((nAir1.compareTo(newToday) < 0) && (nAir2.compareTo(newToday) >=0))
+					return 1;
+				else
+					return nextAir2.compareTo(nextAir1);
 			} else {
 				return object1.getName().compareToIgnoreCase(object2.getName());
 			}
@@ -1681,7 +1694,9 @@ public class DroidShows extends ListActivity
 							serie.setUnwatchedAired(unwatchedAired);
 							if (showNextAiring && unwatchedAired > 0) {
 								NextEpisode nextEpisode = db.getNextEpisode(serieId, dvdOrder);
+								NextEpisode nextAir = db.getNextEpisode(serieId, true, true);
 								String nextEpisodeString = db.getNextEpisodeString(nextEpisode, true);
+								serie.setNextAir(nextAir.firstAiredDate);
 								serie.setNextEpisode(nextEpisodeString);
 								if (isCancelled()) return null;
 								db.execQuery("UPDATE series SET unwatched="+ unwatched +", unwatchedAired="+ unwatchedAired +", nextEpisode='"+ nextEpisodeString +"' WHERE id="+ serieId);
@@ -1906,7 +1921,7 @@ public class DroidShows extends ListActivity
 							.replace("[ne]", strNextEp)
 							.replace("[na]", strNextAiring)
 							.replace("[on]", strOn));
-						holder.sne.setEnabled(serie.getNextAir() != null && serie.getNextAir().compareTo(Calendar.getInstance().getTime()) <= 0);
+						holder.sne.setEnabled(serie.getNextEpisode() != "");
 					} else {
 						holder.sne.setText("");
 					}

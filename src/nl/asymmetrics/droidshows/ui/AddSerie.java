@@ -8,6 +8,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Date;
 
 import nl.asymmetrics.droidshows.DroidShows;
 import nl.asymmetrics.droidshows.R;
@@ -219,12 +220,17 @@ public class AddSerie extends ListActivity
 					Log.d(SQLiteStore.TAG, "Adding "+ sToAdd.getSerieName() +": creating the TV show item");
 					int nseasons = db.getSeasonCount(sToAdd.getId());
 					SQLiteStore.NextEpisode nextEpisode = db.getNextEpisode(sToAdd.getId(), sToAdd.getDvdOrder());
+					SQLiteStore.NextEpisode nextAired = db.getNextEpisode(sToAdd.getId(), true, true);
+					Date nextAiredDate = null;
+					if(nextAired != null ){
+						nextAiredDate = nextAired.firstAiredDate;
+					}
 					int unwatchedAired = db.getEpsUnwatchedAired(sToAdd.getId(), sToAdd.getDvdOrder());
 					int unwatched = db.getEpsUnwatched(sToAdd.getId(), sToAdd.getDvdOrder());
 					String nextEpisodeStr = db.getNextEpisodeString(nextEpisode, DroidShows.showNextAiring && 0 < unwatchedAired && unwatchedAired <= unwatched);
 					Drawable d = Drawable.createFromPath(sToAdd.getPosterThumb());
 					TVShowItem tvsi = new TVShowItem(sToAdd.getId(), sToAdd.getLanguage(), sToAdd.getPosterThumb(), d, sToAdd.getSerieName(), nseasons,
-						nextEpisodeStr, nextEpisode.firstAiredDate, unwatchedAired, unwatched, sToAdd.getPassiveStatus() == 1,
+						nextEpisodeStr, nextAiredDate, unwatchedAired, unwatched, sToAdd.getPassiveStatus() == 1,
 						(sToAdd.getStatus() == null ? "null" : sToAdd.getStatus()), "", sToAdd.getDvdOrder());
 					DroidShows.series.add(tvsi);
 					series.add(sToAdd.getId());
